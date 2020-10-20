@@ -1,3 +1,17 @@
+/*
+ * Code for detecting and displaying the state of buttons and leds for an
+ * escape room prop that consists of 'x' led-button pairs. the status of each
+ * element of an array of size 'x' is represented by the leds and that same
+ * boolean value can be controlled by it's corresponding button.
+ *
+ * This program is constantly monitoring the array for the correct combination
+ * the signal pin will output low once the puzzle is solved and pressing the
+ * buttons will no longer have any effect until the program is reset. 
+ * 
+ */ 
+
+
+// Designate pins 10x button pins, 10x led pins, 1x signal pin
 const int button1 = 0;
 const int button2 = 1;
 const int button3 = 21;
@@ -22,11 +36,15 @@ const int leda = 11;
 
 const int signalPin = 13;
 
+// Variable declaration and definition
+
+// this defines is the amount of led-button pairs
 const int arrSize = 10;
 
-int state = 0;
+
 unsigned long debounceDelay = 20;
 unsigned long lastDebounceTime [arrSize];
+
 int buttonState [arrSize];
 int lastButtonState [arrSize];
 int ledState [arrSize];
@@ -117,27 +135,20 @@ bool buttonRead(int button) {
     }
 }
 
-
+// compares the status of the buttons array with the key
 bool key_check() {
     bool check = true;
     for (int i = 0; i < arrSize; i++) {
-        // Serial.print(ledState[i]);
-        // Serial.print("=");
-        // Serial.print(key[i]);
-        // Serial.print("-");
         if (ledState[i] != key[i]) {
-            // Serial.print("F");
             check = false;
         } else {
-            // Serial.print("T");
         }
-        // Serial.print(" | ");
     }
-    // Serial.print(check);
-    // Serial.println();
     return check;
 }
 
+// once the puzzle is solved, this function will be looping over an over, it
+// simply lights tha led in a pattern to indicate completion
 void led_loop() {
     for (int i = 0; i < arrSize; i++) {
         digitalWrite(leds[i], LOW);
@@ -145,7 +156,6 @@ void led_loop() {
     delay(200);
     for (int i = 0; i < arrSize; i++) {
         digitalWrite(leds[i], HIGH);
-        // digitalWrite(leds[i + arrSize / 2], HIGH);
         delay(200);
     }
     delay(750);
